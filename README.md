@@ -1,7 +1,7 @@
 # Crime & Education: Understanding How School System Indicators Relate to Crime Rates (2015–2024)
 
 ## Contributors
-- Yutong Liu   
+- Bowei Wang  
 
 ---
 
