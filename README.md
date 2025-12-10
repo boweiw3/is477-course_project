@@ -80,7 +80,7 @@ The cleaned outputs are distributed via Box due to assignment requirements.
 
 ---
 
-# Data Quality  *(~900 words)*
+# Data Quality  
 
 Evaluating data quality is essential for understanding the reliability and limitations of the findings.
 
@@ -120,7 +120,7 @@ Despite these challenges, the merged dataset maintains internal coherence, and t
 
 ---
 
-# Findings  *(~500 words)*
+# Findings  
 
 The exploratory analysis offers several informative patterns regarding crime and education system indicators across U.S. states.
 
@@ -136,7 +136,7 @@ Overall, the findings demonstrate that while crime data support clear and interp
 
 ---
 
-# Future Work  *(~850 words)*
+# Future Work  
 
 Several improvements could significantly enhance the reliability and analytical potential of this project.
 
