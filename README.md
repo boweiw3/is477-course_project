@@ -80,90 +80,99 @@ The cleaned outputs are distributed via Box due to assignment requirements.
 
 ---
 
-# Data Quality  
+# Data Quality
 
-Evaluating data quality is essential for understanding the reliability and limitations of the findings.
+Assessing data quality is a critical component of this project because the analytical conclusions and exploratory insights depend heavily on the reliability, completeness, and consistency of the underlying administrative datasets. This section evaluates data quality across three primary domains: (1) the FBI Summary Reporting System (SRS) crime dataset, (2) the NCES State Education Agency (SEA) staffing dataset, and (3) the process of integrating these two datasets. Each domain presents distinct strengths and challenges that shape the interpretability of the final merged dataset.
+
+---
 
 ## Crime Data Quality
 
-The SRS dataset is comparatively high quality. Missingness is minimal for the selected years, and definitions of key crime categories remain stable. Internal consistency is strong, as reflected by expected correlations between variables (e.g., violent crime and aggravated assault). The primary sources of variability stem from differences in local law-enforcement reporting practices. However, because the data are aggregated at the state level, these inconsistencies have limited impact on the analysis.
+The FBI SRS dataset is comparatively robust, especially when evaluated against typical large-scale administrative data sources. Several key strengths contribute to its reliability.
 
-Temporal completeness is a strength: all four selected years provide full coverage of all states. This makes the data suitable for identifying broad national patterns.
+**Completeness:**  
+For the years selected in this project—2015, 2017, 2019, and 2021—the SRS dataset exhibits high completeness across all 50 states. While SRS participation varies across local agencies, state-level aggregation mitigates this issue because states typically achieve broad participation. The dataset includes full state crime totals as well as corresponding population estimates, which enable per-capita normalization and make cross-state comparisons more meaningful.
+
+**Consistency and Standardization:**  
+Crime categories such as *violent crime*, *property crime*, *aggravated assault*, and *robbery* are defined in a consistent manner across states and years. Although the FBI later transitioned toward the NIBRS reporting system, the years included in this project fall within a stable SRS reporting period, minimizing definitional shifts. The internal structure of the SRS dataset allows clean derivation of composite variables, such as crime rates per 100,000 residents.
+
+**Validity and Interpretability:**  
+Because the SRS dataset uses standardized definitions and reporting forms, its variables exhibit predictable correlations. As a test of internal validity, expected statistical relationships—such as high correlation between violent crime and aggravated assault—are indeed observed. This provides confidence that the crime data behave as theoretically expected and contain meaningful signal.
+
+**Limitations:**  
+Despite its strengths, the SRS dataset is not without imperfections. Reporting quality varies across states, and some local jurisdictions may underreport or delay submissions. Furthermore, crime data measure only reported incidents; they do not capture unreported offenses, which may vary systematically between states. However, for exploratory and comparative analysis at the state level, these limitations do not undermine the utility of the dataset. Overall, the SRS data rank as high quality relative to many other public administrative datasets.
 
 ---
 
 ## Education Data Quality
 
-The NCES staffing dataset presents substantial challenges:
+The NCES SEA staffing dataset presents substantially greater quality challenges. Unlike the SRS dataset, which offers consistent structure and broad coverage, the NCES dataset is characterized by high sparsity, variable reporting practices, and structural inconsistencies. These issues profoundly influence the analytical potential of the education variables.
 
-### 1. Sparsity  
-Most variables contain more than 95% missing values, making them impossible to use for analysis. Only broad staffing totals are sufficiently populated to be retained.
+**Sparsity and Missingness:**  
+The SEA staffing files contain hundreds of columns representing detailed occupational categories within state education agencies. However, more than 90% of these fields are empty or inconsistently populated across states and years. Many staffing categories appear not to be reported at all by certain states, while others are reported sporadically. This level of sparsity makes most variables unusable for cross-state comparison or integration with crime data. The only consistently populated variable across all four target years is the broad staffing total (`FTE`, or full-time equivalent count), which becomes the basis for the project's aggregated education staffing indicator.
 
-### 2. Inconsistent Reporting  
-States differ widely in what they report, causing discontinuities over time.
+**Inconsistent Reporting Standards:**  
+States differ significantly in how they classify and report staff. Some states consolidate categories, others split them into subcategories, and still others omit them entirely. Even within a single state, reporting conventions may shift year to year due to changes in administrative systems or shifting NCES requirements. This inconsistency undermines longitudinal comparability and makes it impossible to interpret staffing totals at a granular level.
 
-### 3. Temporal Misalignment  
-Because the files correspond to school years (e.g., 2015–2016), aligning them with calendar-year crime data introduces additional noise.
+**Temporal Misalignment and Interpretive Ambiguity:**  
+The NCES data follow a school-year structure (e.g., 2015–2016), whereas the SRS data follow a calendar-year structure. Aligning these requires approximations—for example, matching the 2015–2016 school year to the 2015 calendar year. This introduces temporal ambiguity, particularly if staffing changes occur mid-year or at the beginning of a school cycle. For highly aggregated variables, this may not distort trends dramatically, but it does limit the precision of any analysis comparing crime rates and education staffing.
 
-### 4. Implausible Observations  
-Several states report staffing totals that are clearly too low or inconsistent with trends, reflecting underreporting rather than actual changes.
-
-Collectively, these quality issues mean the education staffing variable should be treated as a coarse, noisy indicator rather than a precise measure.
+**Validity Concerns and Anomalous Observations:**  
+Some states report implausibly low or fluctuating staffing totals, likely due to changes in reporting completeness rather than true organizational changes. These anomalies contribute noise to the dataset and reduce the interpretability of longitudinal patterns. As a result, while the staffing totals are the most reliable available variable, they remain only a coarse proxy for the true size and composition of a state's education workforce.
 
 ---
 
 ## Integration Quality
 
-Integration quality depends on harmonizing inconsistent temporal structures. Because school-year data cannot be perfectly aligned with calendar-year crime data, the merged dataset incorporates approximations. This introduces uncertainty into any analysis attempting to compare year-to-year relationships.
+Combining the SRS and NCES datasets requires reconciling structural, temporal, and definitional differences. This integration process introduces its own data-quality considerations.
 
-Despite these challenges, the merged dataset maintains internal coherence, and the main crime indicators remain highly interpretable.
+**State Identifier Harmonization:**  
+State names and abbreviations must be standardized across datasets. This step is straightforward, but inconsistencies in capitalization, whitespace, and reporting format required manual correction during cleaning.
+
+**Temporal Alignment Challenges:**  
+As mentioned, school-year and calendar-year data do not align perfectly. The simplification strategy used—matching the NCES school year to the corresponding calendar year—is common in data integration workflows but inherently imperfect. This temporal smoothing may obscure short-term fluctuations or lagged relationships.
+
+**Heterogeneous Measurement Scales:**  
+Crime rates are normalized per capita, while education staffing totals are absolute counts. Integrating these requires careful attention to interpretation: staffing totals do not account for student enrollment, population size, or differences in administrative structure.
+
+**Overall Integration Assessment:**  
+Despite these limitations, the merged dataset maintains internal coherence. The crime indicators are high quality, while the education variable—though noisy—remains usable for broad exploratory purposes. However, any conclusions regarding relationships between crime and education must be tempered by awareness of the data-quality constraints described above.
 
 ---
 
 # Findings  
 
-The exploratory analysis offers several informative patterns regarding crime and education system indicators across U.S. states.
+The exploratory analysis conducted on the integrated crime–education dataset reveals several distinct patterns relating to temporal trends, cross-sectional variation, and internal correlation structures. Although the project’s primary purpose is not to test causal hypotheses, the findings offer insight into how these variables behave over time and across states, and they illustrate what can—and cannot—be inferred from the available administrative data.
 
-First, property crime displays a clear downward trajectory over the selected years. This decline appears consistently across states and aligns with national criminological research documenting long-term reductions in property-related offenses. The decrease is visible both in raw counts and in per-capita rates, confirming that this trend is not an artifact of population changes.
+The most striking pattern observed in the data is the consistent decline in property crime between 2015 and 2021. This trend is robust across states and is visible both in raw crime counts and in per-capita crime rates. The decreases align with long-term national patterns documented by criminologists, suggesting that macro-level social or economic forces may be driving the continued reduction in property offenses. The fact that the decline persists across multiple years and in nearly all states strengthens the conclusion that this is a genuine nationwide trend rather than an artifact of measurement error or inconsistent reporting.
 
-In contrast, violent crime exhibits relative stability. While some states show localized increases or decreases, the overall pattern does not indicate a strong directional trend. This suggests that violent crime is influenced by longer-term structural factors that do not fluctuate rapidly from year to year.
+Violent crime, by contrast, exhibits a different pattern. Instead of a consistent upward or downward trajectory, violent crime rates remain comparatively stable over the four selected years. State-to-state variation exists—some states show modest increases while others display slight declines—but no coherent national trend emerges. This stability suggests that violent crime may be influenced by structural factors that change more slowly or unevenly across jurisdictions. Unlike property crime, which is more sensitive to economic conditions and prevention strategies, violent crime often reflects deeper social conditions that may not fluctuate significantly over short time horizons.
 
-The education staffing variable exhibits no coherent trend. Increases or decreases in staffing appear random across states and years, a reflection of the underlying sparsity and inconsistency in the NCES data rather than meaningful variation. Because of this, staffing totals cannot reliably capture actual changes in state education labor forces.
+The education staffing variable—an aggregated count derived from the NCES SEA files—does not exhibit meaningful temporal structure. Some states appear to experience increases in staffing over time, while others appear to decrease, but these patterns do not correspond to known policy changes or demographic shifts. Instead, the fluctuations are largely attributable to inconsistencies in reporting practices. This aligns with the data quality assessment, which identified sparsity and heterogeneity as major limitations of the NCES dataset. As a result, any interpretation of staffing levels as true indicators of state education system capacity must be made cautiously.
 
-Correlation analysis reveals high internal correlation within crime categories, as expected. States with high aggravated assault rates, for example, also tend to exhibit high violent crime rates. Property crime categories cluster similarly. By contrast, education staffing totals show near-zero correlation with crime rates. This does not imply no relationship exists between education and crime; rather, the dataset is too coarse and inconsistent to capture any such relationship, especially given the temporal misalignment.
+Cross-sectional comparisons further illustrate the limitations of the education data. In any given year, states differ substantially in their total staffing counts, but these differences correlate more strongly with population size than with any identifiable structural factors. Because the dataset lacks variables such as enrollment, expenditures, or teacher–student ratios, the staffing total does not provide enough granularity to support meaningful state-level comparisons beyond noting broad scale differences.
 
-Overall, the findings demonstrate that while crime data support clear and interpretable patterns, education staffing data impose major constraints on the depth and reliability of cross-domain analysis.
+The correlation analysis highlights these constraints. Crime categories correlate strongly with one another, confirming expected internal structure: states with high aggravated assault rates tend to have high overall violent crime rates, and property crime subcategories move in tandem. Education staffing totals, however, show near-zero correlation with crime metrics. This absence of correlation does not imply that education systems have no relationship with crime; rather, it indicates that the available administrative variable is too crude, noisy, or inconsistently measured to capture any underlying relationship. Additionally, the temporal misalignment between school-year and calendar-year data introduces further attenuation in possible correlations.
+
+Taken together, these findings emphasize that while crime data provide clear, interpretable patterns, the education variable’s limitations significantly restrict the analytical depth achievable in this exploratory project. Nonetheless, the integrated dataset succeeds in illustrating broad temporal and structural features of crime across U.S. states and highlights key considerations for future data collection and research design.
 
 ---
 
 # Future Work  
 
-Several improvements could significantly enhance the reliability and analytical potential of this project.
+The exploratory analysis in this project highlights several areas where future work could substantially improve the interpretability, accuracy, and analytical potential of the integrated crime–education dataset. Because the current dataset relies on highly aggregated staffing totals and simplified temporal alignment, the next steps should focus on expanding data richness, strengthening methodological rigor, and improving the structural integrity of the integration process.
 
-### 1. Incorporate richer education metrics  
-The staffing total used here is highly aggregated and insufficient for deeper analysis. Future work should incorporate:
-- student–teacher ratios  
-- per-pupil expenditures  
-- enrollment counts  
-- district-level staffing  
-- teacher turnover data  
+One immediate avenue for improvement involves incorporating more detailed educational indicators. The staffing totals used here provide only a coarse snapshot of state education systems and do not reflect important factors such as student–teacher ratios, instructional expenditures, class sizes, or staff distribution across districts. Adding variables from NCES district-level datasets—such as finance data, enrollment counts, or teacher retention rates—would capture more substantive variation and allow for deeper investigation into the relationship between education systems and crime. Because educational environments vary widely within states, these more granular indicators could reveal patterns obscured by the aggregated staffing variable.
 
-These would provide more nuanced representations of education systems.
+A second direction for future work involves integrating socioeconomic variables from external sources such as the U.S. Census Bureau or the American Community Survey. Crime and education outcomes are deeply intertwined with broader social and economic conditions, including poverty rates, unemployment, population density, and demographic composition. Without controlling for these structural factors, any observed relationships between crime and education risk being confounded. Incorporating these variables into the merged dataset would make any subsequent modeling efforts more valid and informative.
 
-### 2. Add socioeconomic indicators  
-Crime and education are strongly shaped by socioeconomic context. Integrating Census or ACS variables such as unemployment, poverty rates, income distribution, and demographic composition would provide additional explanatory depth.
+Another important enhancement concerns temporal alignment. The present analysis matches academic-year staffing data to calendar-year crime data through a simple correspondence, but this approximation introduces measurement noise. Future work could explore lag structures—where education metrics from one school year are linked to crime outcomes in the following year—or weighted averaging across overlapping years. These refinements would improve temporal specificity and help uncover whether changes in education systems precede shifts in crime levels.
 
-### 3. Improve temporal alignment  
-A major limitation is the mismatch between calendar-year crime data and school-year education data. Future work could incorporate lag structures or weighted averages to improve alignment.
+Increasing geographic resolution represents another promising direction. State-level analysis is useful for identifying broad trends, but it masks substantial within-state variation. Shifting to county-level crime data (available through NIBRS or state reporting systems) and district-level education data would produce a more nuanced dataset capable of detecting local patterns. This would also support more rigorous causal designs by increasing the number of observations and capturing heterogeneity across communities.
 
-### 4. Move to finer geographic units  
-State-level aggregation obscures local variation. Moving to county- or district-level data would reveal patterns hidden at the state level.
+Finally, future work could incorporate more advanced modeling frameworks. With improved data quality and additional variables, statistical approaches such as fixed-effects panel models, multilevel hierarchical models, or structural time-series models could be used to examine how changes within states relate to changes in crime and education over time. At present, the limitations of the staffing dataset prevent such modeling from being meaningful, but the integrated structure developed in this project provides a foundation that can be extended as better data become available.
 
-### 5. Automate data processing  
-A Snakemake workflow or similar system could fully automate the cleaning, integration, and analysis pipeline, improving reproducibility.
-
-### 6. Conduct causal analyses  
-If richer and more consistent data become available, methods such as panel regressions, fixed-effects models, or causal inference frameworks could be applied.
+In summary, future improvements should focus on expanding the educational data, integrating socioeconomic context, refining temporal matching, increasing geographic detail, and applying more robust analytical methods. These enhancements would significantly deepen the insights that can be drawn from the dataset and allow for a more comprehensive understanding of the complex relationship between crime and public education systems.
 
 ---
 
